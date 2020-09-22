@@ -19,6 +19,7 @@ void vline(unsigned char ,int,int,int,int);
 void hline(unsigned char,int,int,int,int);
 void drawbox (int,int,int,int,char);
 void gamescreen(void);
+void getname(void);
 void size (int,int);
 void writechar(char,int,int,int);
 void monitor(void);
@@ -35,6 +36,7 @@ void killeater(void);
 int maze[25][80],score,row,col,ascii,scan,liveslost,delayfactor;
 int gd=DETECT,gm,midx,midy,maxx,maxy;
 int bugnumber , r[5],c[5],dir[5];
+char name[10];
 unsigned  char charbelow[5];
 char far *vid_mem= (char far *) 0xB8000000L ;
 
@@ -54,8 +56,11 @@ while (1)
    /* Initialize variables at thee4 start of each game*/
 	    /*create opening screen*/
 initialise();
+getname();
 /* Draw ther screen for the game*/
 gamescreen();
+/* Get the name from the user*/
+
 /* monitor the movement of the bugs and the eater*/
 
 
@@ -68,6 +73,14 @@ if(ans== 'N')
  break;
 }
 }
+
+void getname(void)
+{
+	clrscr();
+	printf("Enter Your Name: ");
+	scanf("%s",&name);
+}
+
 void startscreen(void)
 {
 char ch;
@@ -95,6 +108,7 @@ setcolor(YELLOW);
 /* Draw two vertical lines*/
 line (55,1,55,maxy-2);
 line (maxx-55,1,maxx-55,maxy-2);
+
 
 /*display the string  "EATER" ,horizontally */
 setcolor(6);
@@ -246,25 +260,33 @@ nosound();
 char endscreen()
 {
 char ans;
-initgraph(&gd,&gm,"d:\tc\bgi");
+initgraph(&gd,&gm,"C:\\turboc3\\bgi");
 rectangle(0,0,maxx,maxy);
 rectangle(2,2,maxx-2,maxy-2);
 settextjustify(CENTER_TEXT,CENTER_TEXT);
 settextstyle(TRIPLEX_FONT,HORIZ_DIR,3);
 if(liveslost==3)
 {
+
 outtextxy(midx,midy-30,"Bad Luck!!");
-outtextxy(midx,midy,"Try Again");}
+outtextxy(midx,midy, name);
+outtextxy(midx,midy+30,"Try Again");
+outtextxy(midx,midy+60,"your score : ");
+char sc[10];
+itoa(score,sc,10);
+outtextxy(midx+90,midy+60,sc);
+}
 else
 {
-	outtextxy(midx,midy/2,"You really are a");
+	outtextxy(midx,midy/2-30,name);
+	outtextxy(midx,midy/2,"you really are a");
 	settextstyle(DEFAULT_FONT,HORIZ_DIR,6);
 	outtextxy(midx,midy,"GENIUS!!");
-	}
+}
 
-	settextstyle(TRIPLEX_FONT,HORIZ_DIR,3);
-	outtextxy(midx,midy+midy/2,"Another game(Y?N)...");
-   while(!(ans=='Y'||ans=='N'))
+settextstyle(TRIPLEX_FONT,HORIZ_DIR,3);
+outtextxy(midx,midy+midy/2,"Another game(Y?N)...");
+while(!(ans=='Y'||ans=='N'))
    {
    fflush(stdin);
    ans=getch();
